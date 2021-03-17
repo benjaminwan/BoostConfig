@@ -21,14 +21,16 @@
         app:subtitleTextAppearance="@style/Toolbar.SubtitleText"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-
-        <fragment
-            android:id="@+id/navHostFragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph" />
+    <fragment
+        android:id="@+id/navHostFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

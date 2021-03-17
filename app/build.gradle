@@ -77,13 +77,15 @@ dependencies {
 
     //Mavericks
     implementation 'com.airbnb.android:mavericks:2.1.0'
-    //implementation 'com.airbnb.android:mavericks-navigation:2.0.0'
 
     //Epoxy
     def epoxy_version = "4.4.1"
     implementation "com.airbnb.android:epoxy:$epoxy_version"
-    implementation "com.airbnb.android:epoxy-paging:$epoxy_version"
     kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
+
+    //SwipeMenuLayout
+    def swipe_version = "1.0.3"
+    implementation "com.github.benjaminwan.SwipeMenuLayout:SwipeMenuLayout-Core:$swipe_version"
 
     implementation project(':BoostConfig')
 }
