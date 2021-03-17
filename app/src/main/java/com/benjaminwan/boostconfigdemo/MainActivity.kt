@@ -1,4 +1,4 @@
-package com.benjaminwan.boostconfig
+package com.benjaminwan.boostconfigdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
