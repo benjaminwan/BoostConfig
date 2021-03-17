@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -43,6 +45,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
     applicationVariants.all {
         variant ->
             variant.outputs.all {
@@ -62,6 +67,23 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    //Navigation
+    def navigation_version = "2.3.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+
+    //Logger
+    implementation 'com.orhanobut:logger:2.2.0'
+
+    //Mavericks
+    implementation 'com.airbnb.android:mavericks:2.1.0'
+    //implementation 'com.airbnb.android:mavericks-navigation:2.0.0'
+
+    //Epoxy
+    def epoxy_version = "4.4.1"
+    implementation "com.airbnb.android:epoxy:$epoxy_version"
+    implementation "com.airbnb.android:epoxy-paging:$epoxy_version"
+    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
 
     implementation project(':BoostConfig')
 }

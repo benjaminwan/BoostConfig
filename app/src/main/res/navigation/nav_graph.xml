@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/page1Fragment">
+
+    <fragment
+        android:id="@+id/page1Fragment"
+        android:name="com.benjaminwan.boostconfigdemo.ui.fragment1.Page1Fragment"
+        android:label="Page1Fragment" />
+
+    <fragment
+        android:id="@+id/page2Fragment"
+        android:name="com.benjaminwan.boostconfigdemo.ui.fragment2.Page2Fragment"
+        android:label="Page2Fragment" />
+
+    <fragment
+        android:id="@+id/page3Fragment"
+        android:name="com.benjaminwan.boostconfigdemo.ui.fragment3.Page3Fragment"
+        android:label="Page3Fragment" />
+
+    <fragment
+        android:id="@+id/page4Fragment"
+        android:name="com.benjaminwan.boostconfigdemo.ui.fragment4.Page4Fragment"
+        android:label="Page4Fragment" />
+</navigation>

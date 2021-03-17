@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/page1Fragment"
+        android:icon="@drawable/ic_filter_1"
+        android:title="Page1" />
+    <item
+        android:id="@+id/page2Fragment"
+        android:icon="@drawable/ic_filter_2"
+        android:title="Page2" />
+    <item
+        android:id="@+id/page3Fragment"
+        android:icon="@drawable/ic_filter_3"
+        android:title="Page3" />
+    <item
+        android:id="@+id/page4Fragment"
+        android:icon="@drawable/ic_filter_4"
+        android:title="Page4" />
+</menu>
