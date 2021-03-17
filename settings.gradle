@@ -1,0 +1,3 @@
+rootProject.name = "BoostConfigDemo"
+include ':app'
+include ':BoostConfig'
