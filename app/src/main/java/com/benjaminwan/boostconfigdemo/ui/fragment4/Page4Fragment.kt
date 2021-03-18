@@ -1,54 +1,98 @@
 package com.benjaminwan.boostconfigdemo.ui.fragment4
 
-import android.os.Bundle
 import android.view.View
-import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
-import com.airbnb.mvrx.MavericksView
+import android.view.ViewGroup
 import com.airbnb.mvrx.activityViewModel
-import com.airbnb.mvrx.withState
+import com.benjaminwan.boostconfig.itemviews.checkBoxItemView
 import com.benjaminwan.boostconfigdemo.R
-import com.benjaminwan.boostconfigdemo.databinding.FragmentListBinding
+import com.benjaminwan.boostconfigdemo.models.Student
 import com.benjaminwan.boostconfigdemo.ui.ConfigViewModel
-import com.benjaminwan.boostconfigdemo.utils.setMarginItemDecorationAndDrawBottomSeparator
+import com.benjaminwan.boostconfigdemo.ui.base.BaseMavericksEpoxyFragment
+import com.benjaminwan.boostconfigdemo.utils.current
 import com.benjaminwan.boostconfigdemo.utils.simpleController
-import com.benjaminwan.boostconfigdemo.utils.viewBinding
+import com.benjaminwan.swipemenulayout.menuItems
 
-class Page4Fragment(@LayoutRes contentLayoutId: Int = R.layout.fragment_list) :
-    Fragment(contentLayoutId), MavericksView {
+class Page4Fragment : BaseMavericksEpoxyFragment() {
 
-    private val epoxyController by lazy { epoxyController() }
-    private val binding: FragmentListBinding by viewBinding()
-    private val configVM: ConfigViewModel by activityViewModel()
+    override val vm: ConfigViewModel by activityViewModel(ConfigViewModel::class) { "page4" }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        epoxyController.onRestoreInstanceState(savedInstanceState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        epoxyController.onSaveInstanceState(outState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
-        initViews()
-    }
-
-    private fun initViews() {
-        binding.chatDevRv.setHasFixedSize(true)
-        binding.chatDevRv.setMarginItemDecorationAndDrawBottomSeparator(4, 2, 4, 2, 1)
-        binding.chatDevRv.setController(epoxyController)
-    }
-
-    override fun invalidate() = withState(configVM) { config ->
-        requireActivity().invalidateOptionsMenu()
-        binding.chatDevRv.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(configVM) { config ->
-
+    override fun epoxyController() = simpleController(vm) { config ->
+        checkBoxItemView {
+            id("CheckBox_test")
+            borderWidthDp(1)
+            headerIcon(R.drawable.ic_filter_1)
+            leftText(config.students.size.toString())
+            rightIsChecked(config.students.size % 2 == 0)
+            onCheckedChangeListener { buttonView, isChecked ->
+                val students = vm.current.students
+                vm.addStudent(Student.new("Student${students.size}", 10, true))
+            }
+        }
+        config.students.forEachIndexed { index, student ->
+            checkBoxItemView {
+                id("CheckBox_${student.id}")
+                borderWidthDp(if (index % 2 == 0) 2 else 0)
+                visibility(if (student.isGone) View.GONE else View.VISIBLE)
+                contentViewEnable(index % 2 == 0)
+                headerText(if (index % 2 == 0) index.toString() else "")
+                headerIcon(if (index % 2 == 0) 0 else R.drawable.ic_filter_2)
+                leftText(student.name)
+                rightIsChecked(student.isMale)
+                onCheckedChangeListener { buttonView, isChecked ->
+                    val studentState = vm.current.getStudent(student.id)
+                    vm.setStudent(studentState.copy(isMale = isChecked))
+                }
+                leftMenu(
+                    if (index % 2 == 0)
+                        menuItems {
+                            menuItem {
+                                this.id = 0
+                                width = ViewGroup.LayoutParams.WRAP_CONTENT
+                                height = ViewGroup.LayoutParams.MATCH_PARENT
+                                title = student.isMale.toString()
+                                titleColorRes = R.color.selector_blue5_to_blue7
+                                backgroundRes = R.drawable.bg_white_to_transparent_half
+                            }
+                        } else emptyList()
+                )
+                rightMenu(
+                    if (index % 2 == 0)
+                        menuItems {
+                            menuItem {
+                                this.id = 0
+                                width = 50
+                                height = ViewGroup.LayoutParams.MATCH_PARENT
+                                title = "修改"
+                                titleColorRes = R.color.selector_white_to_grey5
+                                backgroundRes = R.drawable.bg_green5_to_green7
+                                iconRes = R.drawable.ic_back
+                                iconColorRes = R.color.selector_white_to_grey5
+                            }
+                            menuItem {
+                                this.id = 1
+                                width = 50
+                                height = ViewGroup.LayoutParams.MATCH_PARENT
+                                title = "隐藏"
+                                titleColorRes = R.color.selector_white_to_grey5
+                                backgroundRes = R.drawable.bg_orange5_to_orange7
+                            }
+                        } else emptyList()
+                )
+                rightMenuClickListener { swLayout, swItem, view ->
+                    val studentState = vm.current.getStudent(student.id)
+                    when (swItem.id) {
+                        0 -> {
+                            vm.setStudent(studentState.copy(isMale = !studentState.isMale))
+                        }
+                        1 -> {
+                            vm.setStudent(studentState.copy(isGone = true))
+                        }
+                        else -> {
+                        }
+                    }
+                    swLayout.closeMenu()
+                }
+            }
+        }
     }
 }

@@ -87,6 +87,24 @@ class TextItemView @JvmOverloads constructor(
     }
 
     @ModelProp
+    fun setBorderWidthDp(padding: Int?) {
+        if (padding == null) {
+            contentLayout.setPadding(0)
+        } else {
+            contentLayout.setPadding(dp2px(context, padding))
+        }
+    }
+
+    @ModelProp
+    fun setContentViewEnable(isEnable: Boolean?) {
+        if (isEnable != null) {
+            contentLayout.isEnabled = isEnable
+        } else {
+            contentLayout.isEnabled = true
+        }
+    }
+
+    @ModelProp
     fun setHeaderIcon(@DrawableRes idRes: Int?) {
         if (idRes == null || idRes == 0) {
             headerIV.visibility = View.GONE
@@ -116,15 +134,6 @@ class TextItemView @JvmOverloads constructor(
         rightTV.text = content ?: ""
     }
 
-    @ModelProp
-    fun setBorderWidthDp(padding: Int?) {
-        if (padding == null) {
-            contentLayout.setPadding(0)
-        } else {
-            contentLayout.setPadding(dp2px(context, padding))
-        }
-    }
-
     @CallbackProp
     fun onClickListener(listener: View.OnClickListener?) {
         contentLayout.setOnClickListener(listener)
@@ -147,7 +156,7 @@ class TextItemView @JvmOverloads constructor(
     }
 
     @CallbackProp
-    fun setLeftMenuClickListener(listener: ((swipeLayout: SwipeMenuLayout, item: SwipeMenuItem, view: View) -> Unit)?) {
+    fun setLeftMenuClickListener(listener: ((swLayout: SwipeMenuLayout, swItem: SwipeMenuItem, view: View) -> Unit)?) {
         swipeMenuLayout.leftMenuView.setOnMenuItemClickListener { item ->
             listener?.invoke(swipeMenuLayout, item, swipeMenuLayout.leftMenuView)
         }
@@ -170,7 +179,7 @@ class TextItemView @JvmOverloads constructor(
     }
 
     @CallbackProp
-    fun setRightMenuClickListener(listener: ((swipeLayout: SwipeMenuLayout, item: SwipeMenuItem, view: View) -> Unit)?) {
+    fun setRightMenuClickListener(listener: ((swLayout: SwipeMenuLayout, swItem: SwipeMenuItem, view: View) -> Unit)?) {
         swipeMenuLayout.rightMenuView.setOnMenuItemClickListener { item ->
             listener?.invoke(swipeMenuLayout, item, swipeMenuLayout.rightMenuView)
         }

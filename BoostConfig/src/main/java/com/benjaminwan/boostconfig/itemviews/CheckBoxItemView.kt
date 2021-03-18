@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatCheckBox
@@ -75,32 +76,15 @@ class CheckBoxItemView @JvmOverloads constructor(
     }
 
     @ModelProp
-    fun setHeaderImage(@DrawableRes idRes: Int?) {
-        if (idRes == null) {
-            headerIV.visibility = View.GONE
-            return
+    fun setVisibility(visibility: Int?) {
+        when (visibility) {
+            null -> {
+                swipeMenuLayout.visibility = View.VISIBLE
+            }
+            else -> {
+                swipeMenuLayout.visibility = visibility
+            }
         }
-        headerIV.setImageResource(idRes)
-    }
-
-
-    @TextProp
-    fun setHeaderText(content: CharSequence?) {
-        if (content == null) {
-            headerTV.visibility = View.GONE
-        }
-        headerTV.text = content
-    }
-
-    @TextProp
-    fun setLeftText(content: CharSequence?) {
-        checkBox.text = content ?: ""
-    }
-
-    @ModelProp
-    fun setRightIsChecked(isChecked: Boolean?) {
-        isChecked ?: return
-        checkBox.isChecked = isChecked
     }
 
     @ModelProp
@@ -112,9 +96,73 @@ class CheckBoxItemView @JvmOverloads constructor(
         }
     }
 
+    @ModelProp
+    fun setContentViewEnable(isEnable: Boolean?) {
+        if (isEnable != null) {
+            contentLayout.isEnabled = isEnable
+            checkBox.isEnabled = isEnable
+        } else {
+            contentLayout.isEnabled = true
+            checkBox.isEnabled = true
+        }
+    }
+
+    @ModelProp
+    fun setHeaderIcon(@DrawableRes idRes: Int?) {
+        if (idRes == null || idRes == 0) {
+            headerIV.visibility = View.GONE
+        } else {
+            headerIV.visibility = View.VISIBLE
+            headerIV.setImageResource(idRes)
+        }
+    }
+
+    @TextProp
+    fun setHeaderText(content: CharSequence?) {
+        if (content.isNullOrEmpty()) {
+            headerTV.visibility = View.GONE
+        } else {
+            headerTV.visibility = View.VISIBLE
+            headerTV.text = content
+        }
+    }
+
+    @TextProp
+    fun setLeftText(content: CharSequence?) {
+        checkBox.text = content ?: ""
+    }
+
+    @ModelProp
+    fun setRightIsChecked(isChecked: Boolean?) {
+        checkBox.setCheckedIfDifferent(isChecked ?: false)
+    }
+
     @CallbackProp
-    fun onClickListener(listener: View.OnClickListener?) {
-        contentLayout.setOnClickListener(listener)
+    fun onCheckedChangeListener(listener: CompoundButton.OnCheckedChangeListener?) {
+        checkBox.setOnCheckedChangeListener(listener)
+    }
+
+    @ModelProp
+    @JvmOverloads
+    fun setLeftMenu(leftMenu: List<SwipeMenuItem>? = null) {
+        if (leftMenu == null) {
+            hasSwipeMenu = false
+            swipeMenuLayout.leftMenuView.removeAllViews()
+            swipeMenuLayout.leftMenuEnable = false
+            swipeDirectionIV.visibility = View.GONE
+        } else {
+            hasSwipeMenu = true
+            swipeMenuLayout.leftMenuView.createMenu(leftMenu)
+            swipeMenuLayout.leftMenuEnable = true
+            swipeDirectionIV.visibility = View.VISIBLE
+        }
+    }
+
+    @CallbackProp
+    fun setLeftMenuClickListener(listener: ((swLayout: SwipeMenuLayout, swItem: SwipeMenuItem, view: View) -> Unit)?) {
+        swipeMenuLayout.leftMenuView.setOnMenuItemClickListener { item ->
+            listener?.invoke(swipeMenuLayout, item, swipeMenuLayout.leftMenuView)
+        }
     }
 
     @ModelProp
@@ -134,9 +182,15 @@ class CheckBoxItemView @JvmOverloads constructor(
     }
 
     @CallbackProp
-    fun onRightMenuClickListener(listener: ((swipeLayout: SwipeMenuLayout, item: SwipeMenuItem) -> Unit)?) {
+    fun setRightMenuClickListener(listener: ((swLayout: SwipeMenuLayout, swItem: SwipeMenuItem, view: View) -> Unit)?) {
         swipeMenuLayout.rightMenuView.setOnMenuItemClickListener { item ->
-            listener?.invoke(swipeMenuLayout, item)
+            listener?.invoke(swipeMenuLayout, item, swipeMenuLayout.rightMenuView)
+        }
+    }
+
+    private fun AppCompatCheckBox.setCheckedIfDifferent(newState: Boolean) {
+        if (newState != this.isChecked) {
+            this.isChecked = newState
         }
     }
 }

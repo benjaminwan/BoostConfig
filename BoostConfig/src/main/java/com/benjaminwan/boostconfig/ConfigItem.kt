@@ -7,7 +7,6 @@ import com.benjaminwan.swipemenulayout.SwipeMenuLayout
 import java.util.*
 
 data class ConfigItem constructor(
-    val id: String,
     val typeFunc: (() -> ConfigType) = { ConfigType.Text },
     inline val borderWidthFunc: (() -> Int) = { 0 },
     inline val visibilityFuc: (() -> Int) = { View.VISIBLE },
@@ -66,7 +65,6 @@ class ConfigItemBuilder {
 
     fun build(): ConfigItem =
         ConfigItem(
-            UUID.randomUUID().toString(),
             type,
             borderWidth,
             visibility,
