@@ -16,8 +16,10 @@ import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.benjaminwan.boostconfig.R
 import com.benjaminwan.boostconfig.utils.dp2px
+import com.benjaminwan.boostconfig.utils.getColorStateListPrimary
 import com.benjaminwan.swipemenulayout.SwipeMenuItem
 import com.benjaminwan.swipemenulayout.SwipeMenuLayout
+
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class TextItemView @JvmOverloads constructor(
@@ -41,6 +43,7 @@ class TextItemView @JvmOverloads constructor(
         swipeMenuLayout.addOnMenuClosedListener {
             swipeDirectionIV.setImageResource(R.drawable.ic_swipe_left)
         }
+        contentLayout.backgroundTintList = getColorStateListPrimary(context)
     }
 
     private var downX = 0
