@@ -15,6 +15,7 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.benjaminwan.boostconfig.R
+import com.benjaminwan.boostconfig.models.ColorStateRes
 import com.benjaminwan.boostconfig.utils.dp2px
 import com.benjaminwan.boostconfig.utils.getColorStateListPrimary
 import com.benjaminwan.swipemenulayout.SwipeMenuItem
@@ -43,7 +44,6 @@ class TextItemView @JvmOverloads constructor(
         swipeMenuLayout.addOnMenuClosedListener {
             swipeDirectionIV.setImageResource(R.drawable.ic_swipe_left)
         }
-        contentLayout.backgroundTintList = getColorStateListPrimary(context)
     }
 
     private var downX = 0
@@ -99,6 +99,15 @@ class TextItemView @JvmOverloads constructor(
     }
 
     @ModelProp
+    fun setContentViewBackgroundColorState(state: ColorStateRes?) {
+        if (state == null) {
+            contentLayout.backgroundTintList = getColorStateListPrimary(context)
+        } else {
+            contentLayout.backgroundTintList = state.toColorStateList()
+        }
+    }
+
+    @ModelProp
     fun setContentViewEnable(isEnable: Boolean?) {
         if (isEnable != null) {
             contentLayout.isEnabled = isEnable
@@ -135,6 +144,15 @@ class TextItemView @JvmOverloads constructor(
     @TextProp
     fun setRightText(content: CharSequence?) {
         rightTV.text = content ?: ""
+    }
+
+    @ModelProp
+    fun setRightTextColorState(state: ColorStateRes?) {
+        if (state == null) {
+            rightTV.setTextColor(getColorStateListPrimary(context))
+        } else {
+            rightTV.setTextColor( state.toColorStateList())
+        }
     }
 
     @CallbackProp

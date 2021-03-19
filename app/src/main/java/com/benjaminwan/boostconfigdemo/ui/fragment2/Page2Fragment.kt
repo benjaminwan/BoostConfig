@@ -4,11 +4,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.activityViewModel
 import com.benjaminwan.boostconfig.itemviews.editItemView
+import com.benjaminwan.boostconfig.models.ColorStateRes
 import com.benjaminwan.boostconfigdemo.R
 import com.benjaminwan.boostconfigdemo.models.Student
 import com.benjaminwan.boostconfigdemo.ui.ConfigViewModel
 import com.benjaminwan.boostconfigdemo.ui.base.BaseMavericksEpoxyFragment
 import com.benjaminwan.boostconfigdemo.utils.current
+import com.benjaminwan.boostconfigdemo.utils.getColor
 import com.benjaminwan.boostconfigdemo.utils.simpleController
 import com.benjaminwan.swipemenulayout.menuItems
 
@@ -16,11 +18,23 @@ class Page2Fragment : BaseMavericksEpoxyFragment() {
 
     override val vm: ConfigViewModel by activityViewModel(ConfigViewModel::class) { "page2" }
 
+    private val contentViewBackgroundColor by lazy {
+        ColorStateRes(
+            listOf(ColorStateRes.unPressed, ColorStateRes.pressed, ColorStateRes.disabled),
+            listOf(
+                getColor(R.color.material_blue_500),
+                getColor(R.color.material_blue_700),
+                getColor(R.color.material_grey_300)
+            )
+        )
+    }
+
     override fun epoxyController() = simpleController(vm) { config ->
         editItemView {
             id("Edit_test")
             borderWidthDp(1)
             headerIcon(R.drawable.ic_filter_1)
+            contentViewBackgroundColorState(contentViewBackgroundColor)
             leftText("+1")
             rightText(config.students.size.toString())
             onClickListener { view ->

@@ -4,11 +4,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.activityViewModel
 import com.benjaminwan.boostconfig.itemviews.switchItemView
+import com.benjaminwan.boostconfig.models.ColorStateRes
 import com.benjaminwan.boostconfigdemo.R
 import com.benjaminwan.boostconfigdemo.models.Student
 import com.benjaminwan.boostconfigdemo.ui.ConfigViewModel
 import com.benjaminwan.boostconfigdemo.ui.base.BaseMavericksEpoxyFragment
 import com.benjaminwan.boostconfigdemo.utils.current
+import com.benjaminwan.boostconfigdemo.utils.getColor
 import com.benjaminwan.boostconfigdemo.utils.simpleController
 import com.benjaminwan.swipemenulayout.menuItems
 
@@ -16,13 +18,49 @@ class Page3Fragment : BaseMavericksEpoxyFragment() {
 
     override val vm: ConfigViewModel by activityViewModel(ConfigViewModel::class) { "page3" }
 
+    private val contentViewBackgroundColor by lazy {
+        ColorStateRes(
+            listOf(ColorStateRes.unPressed, ColorStateRes.pressed, ColorStateRes.disabled),
+            listOf(
+                getColor(R.color.material_blue_500),
+                getColor(R.color.material_blue_700),
+                getColor(R.color.material_grey_300)
+            )
+        )
+    }
+
+    private val rightTrackColor by lazy {
+        ColorStateRes(
+            listOf(ColorStateRes.unChecked, ColorStateRes.checked, ColorStateRes.disabled),
+            listOf(
+                getColor(R.color.material_grey_500),
+                getColor(R.color.material_amber_200),
+                getColor(R.color.material_grey_200)
+            )
+        )
+    }
+
+    private val rightThumbColor by lazy {
+        ColorStateRes(
+            listOf(ColorStateRes.unChecked, ColorStateRes.checked, ColorStateRes.disabled),
+            listOf(
+                getColor(R.color.material_grey_200),
+                getColor(R.color.material_amber_500),
+                getColor(R.color.material_grey_300)
+            )
+        )
+    }
+
     override fun epoxyController() = simpleController(vm) { config ->
         switchItemView {
             id("Switch_test")
             borderWidthDp(1)
             headerIcon(R.drawable.ic_filter_1)
+            contentViewBackgroundColorState(contentViewBackgroundColor)
             leftText(config.students.size.toString())
             rightIsChecked(config.students.size % 2 == 0)
+            rightTrackColorState(rightTrackColor)
+            rightThumbColorState(rightThumbColor)
             onCheckedChangeListener { buttonView, isChecked ->
                 val students = vm.current.students
                 vm.addStudent(Student.new("Student${students.size}", 10, true))

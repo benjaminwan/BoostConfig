@@ -17,7 +17,9 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.benjaminwan.boostconfig.R
+import com.benjaminwan.boostconfig.models.ColorStateRes
 import com.benjaminwan.boostconfig.utils.dp2px
+import com.benjaminwan.boostconfig.utils.getCheckBoxButtonColorStateList
 import com.benjaminwan.boostconfig.utils.getColorStateListPrimary
 import com.benjaminwan.swipemenulayout.SwipeMenuItem
 import com.benjaminwan.swipemenulayout.SwipeMenuLayout
@@ -34,6 +36,9 @@ class CheckBoxItemView @JvmOverloads constructor(
     private val headerIV by lazy { findViewById<AppCompatImageView>(R.id.headerIV) }
     private val headerTV by lazy { findViewById<AppCompatTextView>(R.id.headerTV) }
     private val checkBox by lazy { findViewById<AppCompatCheckBox>(R.id.checkBox) }
+    private val checkBoxButtonStateList by lazy {
+        getCheckBoxButtonColorStateList(context)
+    }
 
     init {
         View.inflate(context, R.layout.rv_check_box_item, this)
@@ -43,7 +48,6 @@ class CheckBoxItemView @JvmOverloads constructor(
         swipeMenuLayout.addOnMenuClosedListener {
             swipeDirectionIV.setImageResource(R.drawable.ic_swipe_left)
         }
-        contentLayout.backgroundTintList = getColorStateListPrimary(context)
     }
 
     private var downX = 0
@@ -99,6 +103,15 @@ class CheckBoxItemView @JvmOverloads constructor(
     }
 
     @ModelProp
+    fun setContentViewBackgroundColorState(state: ColorStateRes?) {
+        if (state == null) {
+            contentLayout.backgroundTintList = getColorStateListPrimary(context)
+        } else {
+            contentLayout.backgroundTintList = state.toColorStateList()
+        }
+    }
+
+    @ModelProp
     fun setContentViewEnable(isEnable: Boolean?) {
         if (isEnable != null) {
             contentLayout.isEnabled = isEnable
@@ -136,12 +149,24 @@ class CheckBoxItemView @JvmOverloads constructor(
 
     @ModelProp
     fun setRightIsChecked(isChecked: Boolean?) {
-        checkBox.setCheckedIfDifferent(isChecked ?: false)
+        isChecked ?: return
+        checkBox.setCheckedIfDifferent(isChecked)
+    }
+
+    @ModelProp
+    fun setRightButtonColorState(state: ColorStateRes?) {
+        if (state == null) {
+            checkBox.buttonTintList = checkBoxButtonStateList
+        } else {
+            checkBox.buttonTintList = state.toColorStateList()
+        }
     }
 
     @CallbackProp
     fun onCheckedChangeListener(listener: CompoundButton.OnCheckedChangeListener?) {
-        checkBox.setOnCheckedChangeListener(listener)
+        checkBox.setOnClickListener {
+            listener?.onCheckedChanged(checkBox, checkBox.isChecked)
+        }
     }
 
     @ModelProp

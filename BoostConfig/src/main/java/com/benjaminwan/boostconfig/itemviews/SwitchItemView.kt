@@ -1,6 +1,7 @@
 package com.benjaminwan.boostconfig.itemviews
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -17,10 +18,14 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.benjaminwan.boostconfig.R
+import com.benjaminwan.boostconfig.models.ColorStateRes
 import com.benjaminwan.boostconfig.utils.dp2px
 import com.benjaminwan.boostconfig.utils.getColorStateListPrimary
+import com.benjaminwan.boostconfig.utils.getSwitchThumbColorStateList
+import com.benjaminwan.boostconfig.utils.getSwitchTrackColorStateList
 import com.benjaminwan.swipemenulayout.SwipeMenuItem
 import com.benjaminwan.swipemenulayout.SwipeMenuLayout
+
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class SwitchItemView @JvmOverloads constructor(
@@ -34,6 +39,8 @@ class SwitchItemView @JvmOverloads constructor(
     private val headerIV by lazy { findViewById<AppCompatImageView>(R.id.headerIV) }
     private val headerTV by lazy { findViewById<AppCompatTextView>(R.id.headerTV) }
     private val switchCompat by lazy { findViewById<SwitchCompat>(R.id.switchCompat) }
+    private val trackOrigin: ColorStateList by lazy { getSwitchTrackColorStateList(context) }
+    private val thumbOrigin: ColorStateList by lazy { getSwitchThumbColorStateList(context) }
 
     init {
         View.inflate(context, R.layout.rv_switch_item, this)
@@ -43,7 +50,6 @@ class SwitchItemView @JvmOverloads constructor(
         swipeMenuLayout.addOnMenuClosedListener {
             swipeDirectionIV.setImageResource(R.drawable.ic_swipe_left)
         }
-        contentLayout.backgroundTintList = getColorStateListPrimary(context)
     }
 
     private var downX = 0
@@ -99,6 +105,15 @@ class SwitchItemView @JvmOverloads constructor(
     }
 
     @ModelProp
+    fun setContentViewBackgroundColorState(state: ColorStateRes?) {
+        if (state == null) {
+            contentLayout.backgroundTintList = getColorStateListPrimary(context)
+        } else {
+            contentLayout.backgroundTintList = state.toColorStateList()
+        }
+    }
+
+    @ModelProp
     fun setContentViewEnable(isEnable: Boolean?) {
         if (isEnable != null) {
             contentLayout.isEnabled = isEnable
@@ -136,12 +151,33 @@ class SwitchItemView @JvmOverloads constructor(
 
     @ModelProp
     fun setRightIsChecked(isChecked: Boolean?) {
-        switchCompat.setCheckedIfDifferent(isChecked ?: false)
+        isChecked ?: return
+        switchCompat.setCheckedIfDifferent(isChecked)
+    }
+
+    @ModelProp
+    fun setRightTrackColorState(state: ColorStateRes?) {
+        if (state == null) {
+            switchCompat.trackTintList = trackOrigin
+        } else {
+            switchCompat.trackTintList = state.toColorStateList()
+        }
+    }
+
+    @ModelProp
+    fun setRightThumbColorState(state: ColorStateRes?) {
+        if (state == null) {
+            switchCompat.thumbTintList = thumbOrigin
+        } else {
+            switchCompat.thumbTintList = state.toColorStateList()
+        }
     }
 
     @CallbackProp
     fun onCheckedChangeListener(listener: CompoundButton.OnCheckedChangeListener?) {
-        switchCompat.setOnCheckedChangeListener(listener)
+        switchCompat.setOnClickListener {
+            listener?.onCheckedChanged(switchCompat, switchCompat.isChecked)
+        }
     }
 
     @ModelProp

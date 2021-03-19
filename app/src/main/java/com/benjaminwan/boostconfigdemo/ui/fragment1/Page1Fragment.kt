@@ -4,11 +4,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.activityViewModel
 import com.benjaminwan.boostconfig.itemviews.textItemView
+import com.benjaminwan.boostconfig.models.ColorStateRes
+import com.benjaminwan.boostconfig.models.ColorStateRes.Companion.disabled
+import com.benjaminwan.boostconfig.models.ColorStateRes.Companion.pressed
+import com.benjaminwan.boostconfig.models.ColorStateRes.Companion.unPressed
 import com.benjaminwan.boostconfigdemo.R
 import com.benjaminwan.boostconfigdemo.models.Student
 import com.benjaminwan.boostconfigdemo.ui.ConfigViewModel
 import com.benjaminwan.boostconfigdemo.ui.base.BaseMavericksEpoxyFragment
 import com.benjaminwan.boostconfigdemo.utils.current
+import com.benjaminwan.boostconfigdemo.utils.getColor
 import com.benjaminwan.boostconfigdemo.utils.simpleController
 import com.benjaminwan.swipemenulayout.menuItems
 
@@ -16,10 +21,22 @@ class Page1Fragment : BaseMavericksEpoxyFragment() {
 
     override val vm: ConfigViewModel by activityViewModel(ConfigViewModel::class) { "page1" }
 
+    private val contentViewBackgroundColor by lazy {
+        ColorStateRes(
+            listOf(unPressed, pressed, disabled),
+            listOf(
+                getColor(R.color.material_blue_500),
+                getColor(R.color.material_blue_700),
+                getColor(R.color.material_grey_300)
+            )
+        )
+    }
+
     override fun epoxyController() = simpleController(vm) { config ->
         textItemView {
             id("Text_test")
             borderWidthDp(1)
+            contentViewBackgroundColorState(contentViewBackgroundColor)
             headerIcon(R.drawable.ic_filter_1)
             leftText("+1")
             rightText(config.students.size.toString())

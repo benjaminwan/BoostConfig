@@ -4,11 +4,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.activityViewModel
 import com.benjaminwan.boostconfig.itemviews.checkBoxItemView
+import com.benjaminwan.boostconfig.models.ColorStateRes
 import com.benjaminwan.boostconfigdemo.R
 import com.benjaminwan.boostconfigdemo.models.Student
 import com.benjaminwan.boostconfigdemo.ui.ConfigViewModel
 import com.benjaminwan.boostconfigdemo.ui.base.BaseMavericksEpoxyFragment
 import com.benjaminwan.boostconfigdemo.utils.current
+import com.benjaminwan.boostconfigdemo.utils.getColor
 import com.benjaminwan.boostconfigdemo.utils.simpleController
 import com.benjaminwan.swipemenulayout.menuItems
 
@@ -16,13 +18,37 @@ class Page4Fragment : BaseMavericksEpoxyFragment() {
 
     override val vm: ConfigViewModel by activityViewModel(ConfigViewModel::class) { "page4" }
 
+    private val contentViewBackgroundColor by lazy {
+        ColorStateRes(
+            listOf(ColorStateRes.unPressed, ColorStateRes.pressed, ColorStateRes.disabled),
+            listOf(
+                getColor(R.color.material_blue_500),
+                getColor(R.color.material_blue_700),
+                getColor(R.color.material_grey_300)
+            )
+        )
+    }
+
+    private val rightButtonColor by lazy {
+        ColorStateRes(
+            listOf(ColorStateRes.unChecked, ColorStateRes.checked, ColorStateRes.disabled),
+            listOf(
+                getColor(R.color.material_grey_600),
+                getColor(R.color.material_amber_600),
+                getColor(R.color.material_grey_300)
+            )
+        )
+    }
+
     override fun epoxyController() = simpleController(vm) { config ->
         checkBoxItemView {
             id("CheckBox_test")
             borderWidthDp(1)
+            contentViewBackgroundColorState(contentViewBackgroundColor)
             headerIcon(R.drawable.ic_filter_1)
             leftText(config.students.size.toString())
             rightIsChecked(config.students.size % 2 == 0)
+            rightButtonColorState(rightButtonColor)
             onCheckedChangeListener { buttonView, isChecked ->
                 val students = vm.current.students
                 vm.addStudent(Student.new("Student${students.size}", 10, true))

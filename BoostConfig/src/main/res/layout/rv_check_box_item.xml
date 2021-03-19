@@ -42,7 +42,6 @@
             android:background="@color/white"
             android:gravity="center_vertical|end"
             android:layoutDirection="rtl"
-            android:text="Wechat"
             android:textDirection="rtl"
             android:textSize="14sp"
             android:textStyle="bold" />
