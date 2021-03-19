@@ -6,3 +6,8 @@
 ### Introduction
 4 types of epoxy item views For configuration items.
 Text, Edit, Switch, CheckBox.
+
+### Installation
+```groovy
+implementation 'com.github.benjaminwan:BoostConfig:1.0.0'
+```
