@@ -51,7 +51,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     //Epoxy
-    def epoxy_version = "4.4.1"
+    def epoxy_version = "4.4.3"
     implementation "com.airbnb.android:epoxy:$epoxy_version"
     kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
     //SwipeMenuLayout
