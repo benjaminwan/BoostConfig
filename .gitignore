@@ -84,6 +84,3 @@ lint/tmp/
 # lint/reports/
 
 .DS_Store
-
-# schemas
-schemas/
