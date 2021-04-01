@@ -9,5 +9,5 @@ Text, Edit, Switch, CheckBox.
 
 ### Installation
 ```groovy
-implementation 'com.github.benjaminwan:BoostConfig:1.0.0'
+implementation 'com.github.benjaminwan:BoostConfig:1.0.1'
 ```
