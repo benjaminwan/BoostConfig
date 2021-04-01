@@ -151,7 +151,7 @@ class TextItemView @JvmOverloads constructor(
         if (state == null) {
             rightTV.setTextColor(getColorStateListPrimary(context))
         } else {
-            rightTV.setTextColor( state.toColorStateList())
+            rightTV.setTextColor(state.toColorStateList())
         }
     }
 
